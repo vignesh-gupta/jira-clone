@@ -1,10 +1,13 @@
 "use client";
 
-import React from "react";
-import { FcGoogle } from "react-icons/fc";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
 import { FaGithub } from "react-icons/fa";
-import z from "zod";
+import { FcGoogle } from "react-icons/fc";
 
+import DottedSeparator from "@/components/dotted-separator";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,11 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import DottedSeparator from "@/components/dotted-separator";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -24,24 +22,24 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import Link from "next/link";
-
-const formSchema = z.object({
-  email: z.string().trim().min(1, "Required").email(),
-  password: z.string().min(1, "Required"),
-});
+import { Input } from "@/components/ui/input";
+import { type LoginSchema, loginSchema } from "@/lib/zod-schemas";
+import { useLogin } from "@/features/auth/hooks/use-login";
 
 const SignInCard = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const { mutate } = useLogin();
+
+  const onSubmit = (data: LoginSchema) => {
     console.log(data);
+    mutate({ json: data });
   };
 
   return (

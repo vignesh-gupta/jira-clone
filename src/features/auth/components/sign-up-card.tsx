@@ -1,10 +1,13 @@
 "use client";
 
-import React from "react";
-import { FcGoogle } from "react-icons/fc";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
 import { FaGithub } from "react-icons/fa";
-import z from "zod";
+import { FcGoogle } from "react-icons/fc";
 
+import DottedSeparator from "@/components/dotted-separator";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,11 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import DottedSeparator from "@/components/dotted-separator";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -25,17 +23,13 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import Link from "next/link";
-
-const formSchema = z.object({
-  name: z.string().trim().min(1, "Required"),
-  email: z.string().trim().min(1, "Required").email(),
-  password: z.string().min(8, "Minimum 8 characters"),
-});
+import { Input } from "@/components/ui/input";
+import { type RegisterSchema, registerSchema } from "@/lib/zod-schemas";
+import { useRegister } from "../hooks/use-register";
 
 const SignUpCard = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<RegisterSchema>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -43,8 +37,11 @@ const SignUpCard = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const { mutate } = useRegister();
+
+  const onSubmit = (data: RegisterSchema) => {
     console.log(data);
+    mutate({ json: data });
   };
 
   return (
@@ -148,7 +145,10 @@ const SignUpCard = () => {
 
       <CardFooter className="p-7 flex items-center justify-center">
         <p>
-          Already have an account? <Link href="/sign-in" className="text-blue-700">Sign in</Link>
+          Already have an account?{" "}
+          <Link href="/sign-in" className="text-blue-700">
+            Sign in
+          </Link>
         </p>
       </CardFooter>
     </Card>
