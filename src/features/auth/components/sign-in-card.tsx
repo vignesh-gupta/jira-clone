@@ -35,7 +35,7 @@ const SignInCard = () => {
     },
   });
 
-  const { mutate } = useLogin();
+  const { mutate, isPending } = useLogin();
 
   const onSubmit = (data: LoginSchema) => {
     console.log(data);
@@ -81,7 +81,7 @@ const SignInCard = () => {
               )}
             />
 
-            <Button type="submit" size="lg" className="w-full" disabled={false}>
+            <Button type="submit" size="lg" className="w-full" disabled={isPending}>
               Login
             </Button>
           </form>
@@ -97,7 +97,7 @@ const SignInCard = () => {
           variant="secondary"
           size="lg"
           className="w-full"
-          disabled={false}
+          disabled={isPending}
         >
           <FcGoogle className="mr-2 size-5" /> Login with Google
         </Button>
@@ -105,7 +105,7 @@ const SignInCard = () => {
           variant="secondary"
           size="lg"
           className="w-full"
-          disabled={false}
+          disabled={isPending}
         >
           <FaGithub className="mr-2 size-5" />
           Login with Github

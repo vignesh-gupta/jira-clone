@@ -1,29 +1,20 @@
-"use client";
+import UserButton from "@/components/user-button";
+import { getCurrentUser } from "@/features/auth/action";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
-import { useCurrent } from "@/features/auth/hooks/use-current";
-import { useLogout } from "@/features/auth/hooks/use-logout";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+export default async function Home() {
+  const user = await getCurrentUser();
 
-export default function Home() {
-  const router = useRouter();
-
-  const { data, isLoading } = useCurrent();
-  const { mutate } = useLogout();
-
-  useEffect(() => {
-    if (!data && !isLoading) {
-      console.log("Redirecting to sign-in");
-
-      router.push("/sign-in");
-    }
-  }, [data, router, isLoading]);
+  if (!user) {
+    const pathname = headers().get("x-pathname") || "/";
+    const currentEncodedURL = encodeURIComponent(pathname);
+    redirect("/sign-in?q=" + currentEncodedURL);
+  }
 
   return (
     <div>
-      <p>{`Hello ${data?.name}`}</p>
-      <Button onClick={() => mutate()}>Logout</Button>
+      <UserButton />
     </div>
   );
 }
