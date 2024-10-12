@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { type LoginSchema, loginSchema } from "@/lib/zod-schemas";
+import { type LoginSchema, loginSchema } from "@/features/auth/schemas";
 import { useLogin } from "@/features/auth/hooks/use-login";
 
 const SignInCard = () => {
@@ -38,7 +38,6 @@ const SignInCard = () => {
   const { mutate, isPending } = useLogin();
 
   const onSubmit = (data: LoginSchema) => {
-    console.log(data);
     mutate({ json: data });
   };
 

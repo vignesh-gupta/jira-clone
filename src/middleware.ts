@@ -22,8 +22,6 @@ export async function middleware(request: NextRequest) {
     const searchParams = new URLSearchParams(url.search);
     const redirectUrl = searchParams.get("q") ?? "/";
 
-    console.log("middleware - redirectUrl", redirectUrl);
-
     if (user) return NextResponse.redirect(new URL(redirectUrl, url.origin));
 
     return NextResponse.next();

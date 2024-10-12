@@ -1,7 +1,8 @@
-import UserButton from "@/components/user-button";
-import { getCurrentUser } from "@/features/auth/action";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+
+import { getCurrentUser } from "@/features/auth/action";
+import CreateWorkspaceForm from "@/features/workspaces/components/create-workspace-form";
 
 export default async function Home() {
   const user = await getCurrentUser();
@@ -13,8 +14,8 @@ export default async function Home() {
   }
 
   return (
-    <div>
-      <UserButton />
+    <div className="bg-neutral-500 p-4 h-full">
+      <CreateWorkspaceForm />
     </div>
   );
 }

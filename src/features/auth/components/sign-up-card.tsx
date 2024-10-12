@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { type RegisterSchema, registerSchema } from "@/lib/zod-schemas";
+import { type RegisterSchema, registerSchema } from "@/features/auth/schemas";
 import { useRegister } from "../hooks/use-register";
 
 const SignUpCard = () => {
@@ -40,7 +40,6 @@ const SignUpCard = () => {
   const { mutate, isPending } = useRegister();
 
   const onSubmit = (data: RegisterSchema) => {
-    console.log(data);
     mutate({ json: data });
   };
 

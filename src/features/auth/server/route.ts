@@ -6,7 +6,7 @@ import { ID } from "node-appwrite";
 import { createAdminClient } from "@/lib/appwrite";
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
 import { sessionMiddleware } from "@/lib/session-middleware";
-import { loginSchema, registerSchema } from "@/lib/zod-schemas";
+import { loginSchema, registerSchema } from "@/features/auth/schemas";
 
 const authApp = new Hono()
   .get("/current", sessionMiddleware, (c) => c.json({ user: c.get("user") }))
@@ -26,7 +26,7 @@ const authApp = new Hono()
         maxAge: 60 * 60 * 24 * 30, // 30 days
       });
 
-      return c.json({ success: true });
+      return c.json({ success: true , error: null});
     } catch (error) {
       return c.json({
         error: (error as Error)?.message ?? "An error occurred",
@@ -54,6 +54,7 @@ const authApp = new Hono()
 
       return c.json({
         success: true,
+        error: null,
       });
     } catch (e) {
       return c.json({
