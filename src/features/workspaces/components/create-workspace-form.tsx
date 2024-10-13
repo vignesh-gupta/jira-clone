@@ -4,8 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import DottedSeparator from "@/components/dotted-separator";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { workspaceSchema, WorkspaceSchemaType } from "../schemas";
 import {
   Form,
   FormControl,
@@ -14,27 +15,58 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { ImageIcon } from "lucide-react";
+import Image from "next/image";
+import { useRef } from "react";
+import { toast } from "sonner";
 import { useCreateWorkspace } from "../hooks/use-create-workspace";
+import { createWorkspaceSchema, CreateWorkspaceSchemaType } from "../schemas";
 
 type CreateWorkspaceFormProps = {
   onCancel?: () => void;
 };
 
 const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
-  const form = useForm<WorkspaceSchemaType>({
-    resolver: zodResolver(workspaceSchema),
+  const form = useForm<CreateWorkspaceSchemaType>({
+    resolver: zodResolver(createWorkspaceSchema),
     defaultValues: {
       name: "",
+      image: "",
     },
   });
 
   const { mutate, isPending } = useCreateWorkspace();
 
-  const onSubmit = (data: WorkspaceSchemaType) => {
-    mutate({ json: data });
-    form.reset()
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const onSubmit = (data: CreateWorkspaceSchemaType) => {
+    const finalData = {
+      ...data,
+      image: data.image instanceof File ? data.image : undefined,
+    };
+    mutate({ form: finalData });
+    form.reset();
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    console.log({ file });
+    if (!file) return;
+
+    // Check if file is more than 1MB
+    if (file.size > 1024 * 1024) {
+      toast.error("File size should not exceed 1MB");
+      return;
+    }
+
+    form.setValue("image", file);
+  };
+
+  console.log(inputRef);
 
   return (
     <Card className="w-full h-full border-none shadow-none">
@@ -60,6 +92,63 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                       <Input {...field} placeholder="Enter workspace name" />
                     </FormControl>
                   </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <div className="flex flex-col gap-y-2">
+                    <div className="flex items-center gap-x-5">
+                      {field.value ? (
+                        <div className="size-20 relative rounded-md overflow-hidden">
+                          <Image
+                            fill
+                            className="object-cover"
+                            src={
+                              field.value instanceof File
+                                ? URL.createObjectURL(field.value)
+                                : field.value
+                            }
+                            alt="Workspace Icon"
+                          />
+                        </div>
+                      ) : (
+                        <Avatar className="size-20">
+                          <AvatarFallback>
+                            <ImageIcon className="size-9 text-neutral-400" />
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+
+                      <div className="flex flex-col">
+                        <p className="text-sm">Workspace Icon</p>
+                        <p className="text-sm text-muted-foreground">
+                          JPG, JPEG, PNG, SVG. Max size of 1MB
+                        </p>
+                        <input
+                          ref={inputRef}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          disabled={isPending}
+                          onChange={handleImageChange}
+                        />
+
+                        <Button
+                          type="button"
+                          disabled={isPending}
+                          onClick={() => inputRef.current?.click()}
+                          size="xs"
+                          className="w-fit mt-2"
+                          variant="tertiary"
+                        >
+                          Upload Image
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 )}
               />
             </div>
