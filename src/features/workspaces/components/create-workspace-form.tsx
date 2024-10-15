@@ -44,17 +44,22 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
       ...data,
       image: data.image instanceof File ? data.image : undefined,
     };
-    mutate({ form: finalData });
-    form.reset();
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
+    mutate(
+      { form: finalData },
+      {
+        onSuccess: () => {
+          form.reset();
+          if (inputRef.current) {
+            inputRef.current.value = "";
+          }
+        },
+      }
+    );
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
-    console.log({ file });
     if (!file) return;
 
     // Check if file is more than 1MB
@@ -167,7 +172,7 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                 Cancel
               </Button>
               <Button disabled={isPending} size="lg">
-                Submit
+                Create Workspace
               </Button>
             </div>
           </form>
