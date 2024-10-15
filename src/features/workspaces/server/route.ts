@@ -19,11 +19,26 @@ const workspaceApp = new Hono().post(
 
     let uploadedImageUrl: string | undefined;
 
-    if (image instanceof File) {
+    
+    if (image instanceof Blob) {
+      const fileId = ID.unique();
+      const extStr = image.type.split("/")[1];
+
+      console.log({
+        extStr, 
+        imageType: image.type,
+      });
+      
+      const uploadFile = new File(
+        [image],
+        `${fileId}.${extStr.indexOf("svg") != -1 ? "svg" : extStr}`,
+        { type: image.type }
+      );
+
       const file = await storage.createFile(
         IMAGE_BUCKET_ID,
-        ID.unique(),
-        image
+        fileId,
+        uploadFile
       );
 
       const arrayBuffer = await storage.getFilePreview(
@@ -31,7 +46,11 @@ const workspaceApp = new Hono().post(
         file.$id
       );
 
-      uploadedImageUrl = `data:${file.mimeType};base64,${Buffer.from(arrayBuffer).toString("base64")}`;
+      uploadedImageUrl = `data:${file.mimeType};base64,${Buffer.from(
+        arrayBuffer
+      ).toString("base64")}`;
+    } else {
+      console.log("No image uploaded");
     }
 
     const workspace = await databases.createDocument(
@@ -41,7 +60,7 @@ const workspaceApp = new Hono().post(
       {
         name,
         userId: user.$id,
-        image: uploadedImageUrl,
+        imageUrl: uploadedImageUrl,
       }
     );
 

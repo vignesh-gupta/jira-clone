@@ -4,7 +4,7 @@ export const createWorkspaceSchema = z.object({
   name: z.string().trim().min(1, "Required"),
   image: z
     .union([
-      z.instanceof(File),
+      z.instanceof(Blob),
       z.string().transform((val) => (val === "" ? undefined : val)),
     ])
     .optional(),

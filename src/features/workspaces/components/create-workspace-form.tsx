@@ -66,8 +66,6 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
     form.setValue("image", file);
   };
 
-  console.log(inputRef);
-
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex p-7">
@@ -107,8 +105,12 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                             fill
                             className="object-cover"
                             src={
-                              field.value instanceof File
-                                ? URL.createObjectURL(field.value)
+                              field.value instanceof Blob
+                                ? URL.createObjectURL(
+                                    new File([field.value], "image", {
+                                      type: field.value.type,
+                                    })
+                                  )
                                 : field.value
                             }
                             alt="Workspace Icon"
