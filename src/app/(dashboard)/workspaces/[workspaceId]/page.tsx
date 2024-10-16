@@ -1,9 +1,12 @@
-import React from 'react'
+import { getCurrentUser } from "@/features/auth/action";
+import { redirect } from "next/navigation";
+import React from "react";
 
-const WorkspaceId = () => {
-  return (
-    <div>WorkspaceId</div>
-  )
-}
+const WorkspaceId = async () => {
+  const user = await getCurrentUser();
+  if (!user) redirect("/sign-in");
 
-export default WorkspaceId
+  return <div>WorkspaceId</div>;
+};
+
+export default WorkspaceId;

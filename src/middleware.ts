@@ -4,6 +4,8 @@ import { getCurrentUser } from "./features/auth/action";
 // TODO: Add redirect on unauthenticated users
 
 export async function middleware(request: NextRequest) {
+  return NextResponse.next(); // TODO: Remove this line to explore the following code
+
   const url = request.nextUrl;
 
   const ignoreResourcesExt = ["ico", "css", "js", "svg", "png"];
