@@ -19,7 +19,7 @@ import { useCreateWorkspaceModel } from "../hooks/use-create-workspace-model";
 const WorkspaceSwitcher = () => {
   const { data: workspaces, isLoading } = useGetWorkspaces();
   const workspaceId = useWorkspaceId();
-  const { open } = useCreateWorkspaceModel()
+  const { open } = useCreateWorkspaceModel();
 
   const router = useRouter();
 
@@ -33,7 +33,10 @@ const WorkspaceSwitcher = () => {
     <div className="flex flex-col gap-y-2">
       <div className="flex items-center justify-between">
         <p className="text-xs uppercase text-neutral-500">Workspaces</p>
-        <RiAddCircleFill onClick={open} className="size-5 text-neutral-500 hover:opacity-75 transition cursor-pointer" />
+        <RiAddCircleFill
+          onClick={open}
+          className="size-5 text-neutral-500 hover:opacity-75 transition cursor-pointer"
+        />
       </div>
 
       <Select onValueChange={onSelect} value={workspaceId}>
@@ -49,7 +52,7 @@ const WorkspaceSwitcher = () => {
             </SelectItem>
           )}
           {!isLoading &&
-            workspaces?.documents.length &&
+            Number(workspaces?.documents.length ?? 0) > 0 &&
             workspaces?.documents?.map((workspace) => (
               <SelectItem key={workspace.$id} value={workspace.$id}>
                 <div className="flex justify-start items-center gap-3 font-medium">

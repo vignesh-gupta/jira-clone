@@ -166,19 +166,22 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
             </div>
             <DottedSeparator className="py-7" />
 
-            <div className="flex items-center justify-between">
-              <Button
-                disabled={isPending}
-                type="button"
-                variant="secondary"
-                size="lg"
-                onClick={onCancel}
-              >
-                Cancel
-              </Button>
+            <div className="flex items-center justify-between flex-row-reverse">
               <Button disabled={isPending} size="lg">
                 Create Workspace
               </Button>
+
+              {onCancel && (
+                <Button
+                  disabled={isPending}
+                  type="button"
+                  variant="secondary"
+                  size="lg"
+                  onClick={onCancel}
+                >
+                  Cancel
+                </Button>
+              )}
             </div>
           </form>
         </Form>
