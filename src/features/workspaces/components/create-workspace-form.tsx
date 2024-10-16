@@ -21,6 +21,7 @@ import { useRef } from "react";
 import { toast } from "sonner";
 import { useCreateWorkspace } from "../api/use-create-workspace";
 import { createWorkspaceSchema, CreateWorkspaceSchemaType } from "../schemas";
+import { useRouter } from "next/navigation";
 
 type CreateWorkspaceFormProps = {
   onCancel?: () => void;
@@ -35,6 +36,8 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
     },
   });
 
+  const router = useRouter();
+
   const { mutate, isPending } = useCreateWorkspace();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -47,8 +50,9 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
     mutate(
       { form: finalData },
       {
-        onSuccess: () => {
+        onSuccess: ({ data }) => {
           form.reset();
+          router.push(`/workspaces/${data.$id}`);
           if (inputRef.current) {
             inputRef.current.value = "";
           }

@@ -14,10 +14,12 @@ import WorkspaceAvatar from "./workspace-avatar";
 import { useRouter } from "next/navigation";
 import { useWorkspaceId } from "../hooks/use-workspace-id";
 import { Loader2 } from "lucide-react";
+import { useCreateWorkspaceModel } from "../hooks/use-create-workspace-model";
 
 const WorkspaceSwitcher = () => {
   const { data: workspaces, isLoading } = useGetWorkspaces();
   const workspaceId = useWorkspaceId();
+  const { open } = useCreateWorkspaceModel()
 
   const router = useRouter();
 
@@ -31,7 +33,7 @@ const WorkspaceSwitcher = () => {
     <div className="flex flex-col gap-y-2">
       <div className="flex items-center justify-between">
         <p className="text-xs uppercase text-neutral-500">Workspaces</p>
-        <RiAddCircleFill className="size-5 text-neutral-500 hover:opacity-75 transition cursor-pointer" />
+        <RiAddCircleFill onClick={open} className="size-5 text-neutral-500 hover:opacity-75 transition cursor-pointer" />
       </div>
 
       <Select onValueChange={onSelect} value={workspaceId}>
