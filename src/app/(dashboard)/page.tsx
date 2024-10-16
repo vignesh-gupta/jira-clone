@@ -1,21 +1,12 @@
-import { headers } from "next/headers";
+import { getWorkspaces } from "@/features/workspaces/action";
 import { redirect } from "next/navigation";
 
-import { getCurrentUser } from "@/features/auth/action";
-import CreateWorkspaceForm from "@/features/workspaces/components/create-workspace-form";
-
 export default async function Home() {
-  const user = await getCurrentUser();
+  const workspaces = await getWorkspaces();
 
-  if (!user) {
-    const pathname = headers().get("x-pathname") || "/";
-    const currentEncodedURL = encodeURIComponent(pathname);
-    redirect("/sign-in?q=" + currentEncodedURL);
+  if (0 === 0) {
+    redirect("/workspaces/create");
+  } else {
+    redirect(`/workspaces/${workspaces.documents[0].$id}`);
   }
-
-  return (
-    <div className="bg-neutral-500 p-4 h-full">
-      <CreateWorkspaceForm />
-    </div>
-  );
 }

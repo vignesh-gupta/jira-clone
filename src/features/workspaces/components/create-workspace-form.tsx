@@ -19,7 +19,7 @@ import { ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
 import { toast } from "sonner";
-import { useCreateWorkspace } from "../hooks/use-create-workspace";
+import { useCreateWorkspace } from "../api/use-create-workspace";
 import { createWorkspaceSchema, CreateWorkspaceSchemaType } from "../schemas";
 
 type CreateWorkspaceFormProps = {
@@ -87,6 +87,7 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
             <div className="flex flex-col gap-y-4">
               <FormField
                 control={form.control}
+                disabled={isPending}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
