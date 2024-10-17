@@ -1,5 +1,6 @@
 {
   "conventionalCommits.scopes": [
-    "workspace"
+    "workspace",
+    "invite"
   ]
 }

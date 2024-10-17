@@ -26,7 +26,7 @@ const ResetInviteForm = ({ initialValues }: ResetInviteFormProps) => {
     "destructive"
   );
 
-  const fullInviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/invite/${initialValues.$id}/join/${initialValues.inviteCode}`;
+  const fullInviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`;
   const handleCopy = () => {
     navigator.clipboard
       .writeText(fullInviteLink)

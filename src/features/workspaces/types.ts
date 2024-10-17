@@ -6,3 +6,9 @@ export type Workspace = Models.Document & {
   inviteCode: string;
   userId: string;
 };
+
+export type PageWithWorkspaceId = {
+  params: {
+    workspaceId: string;
+  };
+};

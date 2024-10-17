@@ -4,16 +4,11 @@ import EditWorkspaceForm from "@/features/workspaces/components/edit-workspace-f
 import { redirect } from "next/navigation";
 import DeleteWorkspaceForm from "@/features/workspaces/components/delete-workspace-form";
 import ResetInviteForm from "@/features/workspaces/components/reset-invite-form";
-
-type WorkspaceSettingsPageProps = {
-  params: {
-    workspaceId: string;
-  };
-};
+import { PageWithWorkspaceId } from "@/features/workspaces/types";
 
 const WorkspaceSettingsPage = async ({
   params: { workspaceId },
-}: WorkspaceSettingsPageProps) => {
+}: PageWithWorkspaceId) => {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
