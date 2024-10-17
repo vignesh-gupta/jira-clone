@@ -3,6 +3,7 @@ import { InferRequestType, InferResponseType } from "hono";
 
 import { client } from "@/lib/rpc";
 import { toast } from "sonner";
+import { QueryKeys } from "@/lib/constants";
 
 type ResponseType = InferResponseType<(typeof client.api.workspaces)["$post"]>;
 type RequestType = InferRequestType<(typeof client.api.workspaces)["$post"]>;
@@ -20,7 +21,7 @@ export const useCreateWorkspace = () => {
     },
     onSuccess: () => {
       toast.success("Workspace created successfully");
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.WORKSPACES] });
     },
     onError: (err) => {
       console.log(err);

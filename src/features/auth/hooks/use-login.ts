@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { client } from "@/lib/rpc";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { QueryKeys } from "@/lib/constants";
 
 type ResponseType = InferResponseType<(typeof client.api.auth.login)["$post"]>;
 type RequestType = InferRequestType<(typeof client.api.auth.login)["$post"]>;
@@ -26,7 +27,7 @@ export const useLogin = () => {
       }
 
       router.refresh();
-      queryClient.invalidateQueries({ queryKey: ["current"] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.USER] });
     },
     onError: () => {
       toast.error("Failed to login");

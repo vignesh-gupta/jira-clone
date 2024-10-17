@@ -1,5 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
+import { ID, Query } from "node-appwrite";
 
 import {
   DATABASE_ID,
@@ -7,11 +8,11 @@ import {
   MEMBERS_ID,
   WORKSPACES_ID,
 } from "@/config";
-import { sessionMiddleware } from "@/lib/session-middleware";
-import { ID, Query } from "node-appwrite";
-import { createWorkspaceSchema } from "../schemas";
 import { MemberROLE } from "@/features/members/types";
+import { getMembers } from "@/features/members/utils";
+import { sessionMiddleware } from "@/lib/session-middleware";
 import { generateInviteCode } from "@/lib/utils";
+import { createWorkspaceSchema, updateWorkspaceSchema } from "../schemas";
 
 const workspaceApp = new Hono()
   .get("/", sessionMiddleware, async (c) => {
@@ -83,6 +84,7 @@ const workspaceApp = new Hono()
         ).toString("base64")}`;
       } else {
         console.log("No image uploaded");
+        uploadedImageUrl = image;
       }
 
       const workspace = await databases.createDocument(
@@ -102,6 +104,86 @@ const workspaceApp = new Hono()
         workspaceId: workspace.$id,
         role: MemberROLE.ADMIN,
       });
+
+      return c.json({
+        success: true,
+        data: workspace,
+      });
+    }
+  )
+  .patch(
+    "/:workspaceId",
+    zValidator("form", updateWorkspaceSchema),
+    sessionMiddleware,
+    async (c) => {
+      const databases = c.get("databases");
+      const storage = c.get("storage");
+      const user = c.get("user");
+
+      const { workspaceId } = c.req.param();
+      const { image, name } = c.req.valid("form");
+
+      const member = await getMembers({
+        databases,
+        userId: user.$id,
+        workspaceId,
+      });
+
+      if (!member || member.role !== MemberROLE.ADMIN) {
+        return c.json(
+          {
+            success: false,
+            error: "Unauthorized",
+          },
+          401
+        );
+      }
+
+      let uploadedImageUrl: string | undefined;
+
+      console.log({ image });
+
+      if (image instanceof Blob) {
+        const fileId = ID.unique();
+        const extStr = image.type.split("/")[1];
+
+        const uploadFile = new File(
+          [image],
+          `${fileId}.${extStr.indexOf("svg") != -1 ? "svg" : extStr}`,
+          { type: image.type }
+        );
+
+        const file = await storage.createFile(
+          IMAGE_BUCKET_ID,
+          fileId,
+          uploadFile
+        );
+
+        const arrayBuffer = await storage.getFilePreview(
+          IMAGE_BUCKET_ID,
+          file.$id
+        );
+
+        uploadedImageUrl = `data:${file.mimeType};base64,${Buffer.from(
+          arrayBuffer
+        ).toString("base64")}`;
+      } else {
+        console.log("No image uploaded");
+
+        uploadedImageUrl = image;
+      }
+
+      console.log({ name, uploadedImageUrl });
+
+      const workspace = await databases.updateDocument(
+        DATABASE_ID,
+        WORKSPACES_ID,
+        workspaceId,
+        {
+          name,
+          imageUrl: uploadedImageUrl ?? null,
+        }
+      );
 
       return c.json({
         success: true,

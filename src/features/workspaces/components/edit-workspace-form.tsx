@@ -1,7 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import DottedSeparator from "@/components/dotted-separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -15,40 +19,41 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ImageIcon } from "lucide-react";
-import Image from "next/image";
-import { useRef } from "react";
-import { toast } from "sonner";
-import { useCreateWorkspace } from "../api/use-create-workspace";
-import { createWorkspaceSchema, CreateWorkspaceSchemaType } from "../schemas";
-import { useRouter } from "next/navigation";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
+import { useUpdateWorkspace } from "../api/use-update-workspace";
+import { updateWorkspaceSchema, UpdateWorkspaceSchemaType } from "../schemas";
+import { Workspace } from "../types";
 
-type CreateWorkspaceFormProps = {
+type EditWorkspaceFormProps = {
   onCancel?: () => void;
+  initialValues: Workspace;
 };
 
-const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
-  const form = useForm<CreateWorkspaceSchemaType>({
-    resolver: zodResolver(createWorkspaceSchema),
+const EditWorkspaceForm = ({
+  onCancel,
+  initialValues,
+}: EditWorkspaceFormProps) => {
+  const form = useForm<UpdateWorkspaceSchemaType>({
+    resolver: zodResolver(updateWorkspaceSchema),
     defaultValues: {
-      name: "",
-      image: "",
+      ...initialValues,
+      image: initialValues.imageUrl ?? "",
     },
   });
 
   const router = useRouter();
 
-  const { mutate, isPending } = useCreateWorkspace();
+  const { mutate, isPending } = useUpdateWorkspace();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit = (data: CreateWorkspaceSchemaType) => {
+  const onSubmit = (data: UpdateWorkspaceSchemaType) => {
     const finalData = {
       ...data,
-      image: data.image instanceof File ? data.image : undefined,
+      image: data.image instanceof File ? data.image : "",
     };
     mutate(
-      { form: finalData },
+      { form: finalData, param: { workspaceId: initialValues.$id } },
       {
         onSuccess: ({ data }) => {
           form.reset();
@@ -77,8 +82,21 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
 
   return (
     <Card className="w-full h-full border-none shadow-none">
-      <CardHeader className="flex p-7">
-        <CardTitle className="font-bold text-xl">Create a workspace</CardTitle>
+      <CardHeader className="flex flex-row items-center gap-x-4 space-y-0 p-7">
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={
+            onCancel
+              ? onCancel
+              : () => router.push(`/workspaces/${initialValues.$id}`)
+          }
+        >
+          <ArrowLeftIcon className="size-4 mr-2" /> Back
+        </Button>
+        <CardTitle className="font-bold text-xl">
+          {initialValues.name}
+        </CardTitle>
       </CardHeader>
 
       <div className="px-7">
@@ -147,6 +165,7 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                           disabled={isPending}
                           onChange={handleImageChange}
                         />
+
                         {field.value ? (
                           <Button
                             type="button"
@@ -185,7 +204,7 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
 
             <div className="flex items-center justify-between flex-row-reverse">
               <Button disabled={isPending} size="lg">
-                Create Workspace
+                Save Changes
               </Button>
 
               {onCancel && (
@@ -207,4 +226,4 @@ const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
   );
 };
 
-export default CreateWorkspaceForm;
+export default EditWorkspaceForm;

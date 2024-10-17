@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
+import { QueryKeys } from "@/lib/constants";
 
 type ResponseType = InferResponseType<(typeof client.api.auth.logout)["$post"]>;
 
@@ -20,7 +21,8 @@ export const useLogout = () => {
     onSuccess: () => {
       toast.success("Logged out successfully");
       router.refresh();
-      queryClient.invalidateQueries({ queryKey: ["current", "workspaces"] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.USER] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.WORKSPACES] });
     },
     onError: () => {
       toast.error("Failed to logout");
