@@ -8,8 +8,8 @@ import {
   MEMBERS_ID,
   WORKSPACES_ID,
 } from "@/config";
-import { MemberROLE } from "@/features/members/types";
-import { getMembers } from "@/features/members/utils";
+import { MemberRole } from "@/features/members/types";
+import { getMember } from "@/features/members/utils";
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { generateInviteCode } from "@/lib/utils";
 import { createWorkspaceSchema, updateWorkspaceSchema } from "../schemas";
@@ -103,7 +103,7 @@ const workspaceApp = new Hono()
       await databases.createDocument(DATABASE_ID, MEMBERS_ID, ID.unique(), {
         userId: user.$id,
         workspaceId: workspace.$id,
-        role: MemberROLE.ADMIN,
+        role: MemberRole.ADMIN,
       });
 
       return c.json({
@@ -124,13 +124,13 @@ const workspaceApp = new Hono()
       const { workspaceId } = c.req.param();
       const { image, name } = c.req.valid("form");
 
-      const member = await getMembers({
+      const member = await getMember({
         databases,
         userId: user.$id,
         workspaceId,
       });
 
-      if (!member || member.role !== MemberROLE.ADMIN) {
+      if (!member || member.role !== MemberRole.ADMIN) {
         return c.json(
           {
             success: false,
@@ -198,13 +198,13 @@ const workspaceApp = new Hono()
 
     const { workspaceId } = c.req.param();
 
-    const member = await getMembers({
+    const member = await getMember({
       databases,
       userId: user.$id,
       workspaceId,
     });
 
-    if (!member || member.role !== MemberROLE.ADMIN) {
+    if (!member || member.role !== MemberRole.ADMIN) {
       return c.json(
         {
           error: "Unauthorized",
@@ -230,13 +230,13 @@ const workspaceApp = new Hono()
 
     const { workspaceId } = c.req.param();
 
-    const member = await getMembers({
+    const member = await getMember({
       databases,
       userId: user.$id,
       workspaceId,
     });
 
-    if (!member || member.role !== MemberROLE.ADMIN) {
+    if (!member || member.role !== MemberRole.ADMIN) {
       return c.json(
         {
           error: "Unauthorized",
@@ -276,7 +276,7 @@ const workspaceApp = new Hono()
       const databases = c.get("databases");
       const user = c.get("user");
 
-      const member = await getMembers({
+      const member = await getMember({
         databases,
         userId: user.$id,
         workspaceId,
@@ -304,7 +304,7 @@ const workspaceApp = new Hono()
       await databases.createDocument(DATABASE_ID, MEMBERS_ID, ID.unique(), {
         userId: user.$id,
         workspaceId,
-        role: MemberROLE.MEMBER,
+        role: MemberRole.MEMBER,
       });
 
       return c.json({ data: workspace });

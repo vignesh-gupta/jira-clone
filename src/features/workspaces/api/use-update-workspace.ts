@@ -23,7 +23,7 @@ export const useUpdateWorkspace = () => {
         param,
       });
 
-      if (!res.ok) throw new Error("Failed to create workspace");
+      if (!res.ok) throw new Error("Failed to update workspace");
 
       return await res.json();
     },
@@ -39,7 +39,7 @@ export const useUpdateWorkspace = () => {
     onError: (err) => {
       console.log(err);
 
-      toast.error(err.message ?? "Failed to create workspace");
+      toast.error(err.message ?? "Failed to update workspace");
     },
   });
 

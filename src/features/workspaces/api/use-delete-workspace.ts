@@ -22,7 +22,7 @@ export const useDeleteWorkspace = () => {
         param,
       });
 
-      if (!res.ok) throw new Error("Failed to create workspace");
+      if (!res.ok) throw new Error("Failed to delete workspace");
 
       return await res.json();
     },
@@ -35,8 +35,7 @@ export const useDeleteWorkspace = () => {
     },
     onError: (err) => {
       console.log(err);
-
-      toast.error(err.message ?? "Failed to create workspace");
+      toast.error(err.message ?? "Failed to delete workspace");
     },
   });
 
