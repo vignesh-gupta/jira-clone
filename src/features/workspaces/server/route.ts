@@ -212,7 +212,7 @@ const workspaceApp = new Hono()
     }
 
     // TODO: Delete Members, projects & tasks
-    
+
     await databases.deleteDocument(DATABASE_ID, WORKSPACES_ID, workspaceId);
 
     return c.json({
@@ -220,6 +220,41 @@ const workspaceApp = new Hono()
       data: {
         $id: workspaceId,
       },
+    });
+  })
+  .post("/:workspaceId/reset-invite", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const user = c.get("user");
+
+    const { workspaceId } = c.req.param();
+
+    const member = await getMembers({
+      databases,
+      userId: user.$id,
+      workspaceId,
+    });
+
+    if (!member || member.role !== MemberROLE.ADMIN) {
+      return c.json(
+        {
+          error: "Unauthorized",
+        },
+        401
+      );
+    }
+
+    const workspace = await databases.updateDocument(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId,
+      {
+        inviteCode: generateInviteCode(6),
+      }
+    );
+
+    return c.json({
+      success: true,
+      data: workspace,
     });
   });
 

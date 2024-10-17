@@ -6,28 +6,30 @@ import { toast } from "sonner";
 import { QueryKeys } from "@/lib/constants";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.workspaces)[":workspaceId"]["$delete"],
+  (typeof client.api.workspaces)[":workspaceId"]["reset-invite"]["$post"],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.workspaces)[":workspaceId"]["$delete"]
+  (typeof client.api.workspaces)[":workspaceId"]["reset-invite"]["$post"]
 >;
 
-export const useDeleteWorkspace = () => {
+export const useResetInvite = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
-      const res = await client.api.workspaces[":workspaceId"].$delete({
+      const res = await client.api.workspaces[":workspaceId"][
+        "reset-invite"
+      ].$post({
         param,
       });
 
-      if (!res.ok) throw new Error("Failed to create workspace");
+      if (!res.ok) throw new Error("Failed to reset invite");
 
       return await res.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Workspace deleted");
+      toast.success("Invite code reset");
       queryClient.invalidateQueries({ queryKey: [QueryKeys.WORKSPACES] });
       queryClient.invalidateQueries({
         queryKey: [QueryKeys.WORKSPACE, data.$id],
