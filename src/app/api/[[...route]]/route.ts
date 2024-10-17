@@ -1,5 +1,6 @@
 import authApp from "@/features/auth/server/route";
 import membersApp from "@/features/members/server/route";
+import projectApp from "@/features/projects/server/route";
 import workspacesApp from "@/features/workspaces/server/route";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
@@ -10,7 +11,8 @@ const app = new Hono()
   .basePath("/api")
   .route("/auth", authApp)
   .route("/workspaces", workspacesApp)
-  .route("/members", membersApp);
+  .route("/members", membersApp)
+  .route("/projects", projectApp);
 
 export type AppType = typeof app;
 

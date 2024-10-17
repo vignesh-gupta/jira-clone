@@ -7,4 +7,6 @@ export enum QueryKeys {
   USER = "current",
   MEMBERS = "members",
   MEMBER = "member",
+  PROJECTS = "projects",
+  PROJECT = "project",
 }

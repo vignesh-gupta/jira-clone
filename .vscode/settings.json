@@ -2,6 +2,7 @@
   "conventionalCommits.scopes": [
     "workspace",
     "invite",
-    "member"
+    "member",
+    "project"
   ]
 }

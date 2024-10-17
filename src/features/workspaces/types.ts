@@ -8,7 +8,9 @@ export type Workspace = Models.Document & {
 };
 
 export type PageWithWorkspaceId = {
-  params: {
-    workspaceId: string;
-  };
+  params: WorkspaceIdProps;
+};
+
+export type WorkspaceIdProps = {
+  workspaceId: string;
 };

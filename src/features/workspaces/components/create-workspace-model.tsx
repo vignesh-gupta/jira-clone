@@ -2,7 +2,7 @@
 
 import CreateWorkspaceForm from "@/features/workspaces/components/create-workspace-form";
 import { useCreateWorkspaceModel } from "@/features/workspaces/hooks/use-create-workspace-model";
-import ResponsiveModel from "./responsive-model";
+import ResponsiveModel from "@/components/responsive-model";
 
 const CreateWorkspaceModel = () => {
   const { isOpen, setIsOpen, close } = useCreateWorkspaceModel();
