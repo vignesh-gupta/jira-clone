@@ -84,7 +84,6 @@ const workspaceApp = new Hono()
         ).toString("base64")}`;
       } else {
         console.log("No image uploaded");
-        uploadedImageUrl = image;
       }
 
       const workspace = await databases.createDocument(
@@ -190,6 +189,38 @@ const workspaceApp = new Hono()
         data: workspace,
       });
     }
-  );
+  )
+  .delete("/:workspaceId", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const user = c.get("user");
+
+    const { workspaceId } = c.req.param();
+
+    const member = await getMembers({
+      databases,
+      userId: user.$id,
+      workspaceId,
+    });
+
+    if (!member || member.role !== MemberROLE.ADMIN) {
+      return c.json(
+        {
+          error: "Unauthorized",
+        },
+        401
+      );
+    }
+
+    // TODO: Delete Members, projects & tasks
+    
+    await databases.deleteDocument(DATABASE_ID, WORKSPACES_ID, workspaceId);
+
+    return c.json({
+      success: true,
+      data: {
+        $id: workspaceId,
+      },
+    });
+  });
 
 export default workspaceApp;

@@ -2,6 +2,7 @@ import { getCurrentUser } from "@/features/auth/queries";
 import { getWorkspace } from "@/features/workspaces/queries";
 import EditWorkspaceForm from "@/features/workspaces/components/edit-workspace-form";
 import { redirect } from "next/navigation";
+import DeleteWorkspaceForm from "@/features/workspaces/components/delete-workspace-form";
 
 type WorkspaceSettingsPageProps = {
   params: {
@@ -21,7 +22,10 @@ const WorkspaceSettingsPage = async ({
 
   return (
     <div className="w-full lg:max-w-2xl">
-      <EditWorkspaceForm initialValues={workspace} />
+      <div className="flex flex-col gap-y-4">
+        <EditWorkspaceForm initialValues={workspace} />
+        <DeleteWorkspaceForm workspaceId={workspaceId} />
+      </div>
     </div>
   );
 };
