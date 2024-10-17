@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "./features/auth/action";
+import { getCurrentUser } from "./features/auth/queries";
 
 // TODO: Add redirect on unauthenticated users
 
