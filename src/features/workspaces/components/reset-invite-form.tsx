@@ -1,24 +1,20 @@
 "use client";
 
+import DottedSeparator from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import React from "react";
-import { Workspace } from "../types";
 import { Input } from "@/components/ui/input";
+import { useConfirm } from "@/hooks/use-confirm";
 import { CopyIcon } from "lucide-react";
 import { toast } from "sonner";
-import DottedSeparator from "@/components/dotted-separator";
 import { useResetInvite } from "../api/use-reset-invite";
-import { useConfirm } from "@/hooks/use-confirm";
-import { useRouter } from "next/navigation";
+import { Workspace } from "../types";
 
 type ResetInviteFormProps = {
   initialValues: Workspace;
 };
 
 const ResetInviteForm = ({ initialValues }: ResetInviteFormProps) => {
-  const router = useRouter();
-
   const { mutate, isPending } = useResetInvite();
   const [ResetDialog, confirmReset] = useConfirm(
     "Reset Invite",
@@ -37,17 +33,9 @@ const ResetInviteForm = ({ initialValues }: ResetInviteFormProps) => {
     const result = await confirmReset();
     if (!result) return;
 
-    mutate(
-      {
-        param: { workspaceId: initialValues.$id },
-      },
-      {
-        onSuccess: () => {
-          router.refresh();
-          toast.success("Invite code reset");
-        },
-      }
-    );
+    mutate({
+      param: { workspaceId: initialValues.$id },
+    });
   };
 
   return (

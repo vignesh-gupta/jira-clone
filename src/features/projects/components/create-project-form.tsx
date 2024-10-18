@@ -53,11 +53,11 @@ const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
     mutate(
       { form: finalData },
       {
-        onSuccess: () => {
+        onSuccess: ({ data }) => {
           form.reset();
 
           // Redirect to the project page
-          router.refresh();
+          router.push(`/workspaces/${workspaceId}/projects/${data.$id}`);
 
           if (inputRef.current) {
             inputRef.current.value = "";

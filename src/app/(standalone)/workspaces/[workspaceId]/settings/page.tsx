@@ -14,8 +14,6 @@ const WorkspaceSettingsPage = async ({
 
   const workspace = await getWorkspace({ workspaceId });
 
-  if (!workspace) redirect(`/workspaces/${workspaceId}`);
-
   return (
     <div className="w-full lg:max-w-2xl">
       <div className="flex flex-col gap-y-4">

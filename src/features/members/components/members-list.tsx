@@ -15,7 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useDeleteMember } from "../api/use-delete-workspace";
 import { useGetMembers } from "../api/use-get-members";
-import { useUpdateMember } from "../api/use-update-workspace";
+import { useUpdateMember } from "../api/use-update-member";
 import { MemberRole } from "../types";
 import MemberAvatar from "./member-avatar";
 import { useConfirm } from "@/hooks/use-confirm";

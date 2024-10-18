@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { client } from "@/lib/rpc";
 import { toast } from "sonner";
 import { QueryKeys } from "@/lib/constants";
+import { useRouter } from "next/navigation";
 
 type ResponseType = InferResponseType<
   (typeof client.api.workspaces)[":workspaceId"]["reset-invite"]["$post"],
@@ -15,6 +16,7 @@ type RequestType = InferRequestType<
 
 export const useResetInvite = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
@@ -30,6 +32,7 @@ export const useResetInvite = () => {
     },
     onSuccess: ({ data }) => {
       toast.success("Invite code reset");
+      router.refresh();
       queryClient.invalidateQueries({ queryKey: [QueryKeys.WORKSPACES] });
       queryClient.invalidateQueries({
         queryKey: [QueryKeys.WORKSPACE, data.$id],
@@ -37,7 +40,6 @@ export const useResetInvite = () => {
     },
     onError: (err) => {
       console.log(err);
-
       toast.error(err.message ?? "Failed to create workspace");
     },
   });

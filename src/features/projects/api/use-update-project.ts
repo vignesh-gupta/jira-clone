@@ -1,26 +1,27 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
-import { QueryKeys } from "@/lib/constants";
 import { client } from "@/lib/rpc";
+import { toast } from "sonner";
+import { QueryKeys } from "@/lib/constants";
+import { useRouter } from "next/navigation";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.workspaces)[":workspaceId"]["$patch"],
+  (typeof client.api.projects)[":projectId"]["$patch"],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.workspaces)[":workspaceId"]["$patch"]
+  (typeof client.api.projects)[":projectId"]["$patch"]
 >;
 
-export const useUpdateWorkspace = () => {
-  const queryClient = useQueryClient();
+export const useUpdateProject = () => {
   const router = useRouter();
+
+  const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ form, param }) => {
-      const res = await client.api.workspaces[":workspaceId"].$patch({
+      const res = await client.api.projects[":projectId"].$patch({
         form,
         param,
       });
@@ -30,19 +31,17 @@ export const useUpdateWorkspace = () => {
       return await res.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Workspace updated!");
-      router.refresh();
+      toast.success("Project updated!");
+      router.refresh()
       queryClient.invalidateQueries({
-        queryKey: [QueryKeys.WORKSPACES],
+        queryKey: [QueryKeys.PROJECTS],
       });
       queryClient.invalidateQueries({
-        queryKey: [QueryKeys.WORKSPACE, data.$id],
+        queryKey: [QueryKeys.PROJECT, data.$id],
       });
     },
-    onError: (err) => {
-      console.log(err);
-
-      toast.error(err.message ?? "Failed to update workspace");
+    onError: () => {
+      toast.error("Failed to update Project");
     },
   });
 

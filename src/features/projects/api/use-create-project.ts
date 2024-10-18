@@ -25,7 +25,6 @@ export const useCreateProject = () => {
     },
     onError: (err) => {
       console.log(err);
-
       toast.error(err.message ?? "Failed to create project");
     },
   });

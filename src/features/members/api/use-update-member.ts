@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { client } from "@/lib/rpc";
 import { toast } from "sonner";
 import { QueryKeys } from "@/lib/constants";
+import { useRouter } from "next/navigation";
 
 type ResponseType = InferResponseType<
   (typeof client.api.members)[":memberId"]["$patch"],
@@ -15,6 +16,7 @@ type RequestType = InferRequestType<
 
 export const useUpdateMember = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param, json }) => {
@@ -29,6 +31,7 @@ export const useUpdateMember = () => {
     },
     onSuccess: () => {
       toast.success("Member updated");
+      router.refresh();
       queryClient.invalidateQueries({ queryKey: [QueryKeys.MEMBERS] });
     },
     onError: (err) => {

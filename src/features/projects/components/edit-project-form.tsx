@@ -20,21 +20,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ArrowLeftIcon, ImageIcon } from "lucide-react";
-import { useUpdateWorkspace } from "../api/use-update-workspace";
-import { updateWorkspaceSchema, UpdateWorkspaceSchemaType } from "../schemas";
-import { Workspace } from "../types";
+import { updateProjectSchema, UpdateProjectSchemaType } from "../schema";
+import { useUpdateProject } from "../api/use-update-project";
+import { Project } from "../types";
 
-type EditWorkspaceFormProps = {
+type EditProjectFormProps = {
   onCancel?: () => void;
-  initialValues: Workspace;
+  initialValues: Project;
 };
 
-const EditWorkspaceForm = ({
-  onCancel,
-  initialValues,
-}: EditWorkspaceFormProps) => {
-  const form = useForm<UpdateWorkspaceSchemaType>({
-    resolver: zodResolver(updateWorkspaceSchema),
+const EditProjectForm = ({ onCancel, initialValues }: EditProjectFormProps) => {
+  const form = useForm<UpdateProjectSchemaType>({
+    resolver: zodResolver(updateProjectSchema),
     defaultValues: {
       ...initialValues,
       image: initialValues.imageUrl ?? "",
@@ -43,15 +40,15 @@ const EditWorkspaceForm = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const { mutate, isPending } = useUpdateWorkspace();
+  const { mutate, isPending } = useUpdateProject();
 
-  const onSubmit = (data: UpdateWorkspaceSchemaType) => {
+  const onSubmit = (data: UpdateProjectSchemaType) => {
     const finalData = {
       ...data,
       image: data.image instanceof File ? data.image : "",
     };
     mutate(
-      { form: finalData, param: { workspaceId: initialValues.$id } },
+      { form: finalData, param: { projectId: initialValues.$id } },
       {
         onSuccess: () => {
           form.reset();
@@ -87,7 +84,7 @@ const EditWorkspaceForm = ({
             onClick={
               onCancel
                 ? onCancel
-                : () => router.push(`/workspaces/${initialValues.$id}`)
+                : () => router.push(`/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}`)
             }
           >
             <ArrowLeftIcon className="size-4 mr-2" /> Back
@@ -111,9 +108,9 @@ const EditWorkspaceForm = ({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Workspace Name</FormLabel>
+                      <FormLabel>Project Name</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Enter workspace name" />
+                        <Input {...field} placeholder="Enter project name" />
                       </FormControl>
                     </FormItem>
                   )}
@@ -139,7 +136,7 @@ const EditWorkspaceForm = ({
                                     )
                                   : field.value
                               }
-                              alt="Workspace Icon"
+                              alt="Project Icon"
                             />
                           </div>
                         ) : (
@@ -151,7 +148,7 @@ const EditWorkspaceForm = ({
                         )}
 
                         <div className="flex flex-col">
-                          <p className="text-sm">Workspace Icon</p>
+                          <p className="text-sm">Project Icon</p>
                           <p className="text-sm text-muted-foreground">
                             JPG, JPEG, PNG, SVG. Max size of 1MB
                           </p>
@@ -225,4 +222,4 @@ const EditWorkspaceForm = ({
   );
 };
 
-export default EditWorkspaceForm;
+export default EditProjectForm;
