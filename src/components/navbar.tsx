@@ -4,7 +4,7 @@ import MobileSidebar from "./mobile-sidebar";
 
 const Navbar = () => {
   return (
-    <nav className="pt-4 px-6 flex items-center justify-between">
+    <nav className="pt-4 px-6 flex items-center justify-between h-16">
       <div className="lg:flex flex-col hidden">
         <h1 className="text-2xl font-semibold">Home</h1>
         <p className="text-muted-foreground">
