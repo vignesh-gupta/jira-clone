@@ -2,12 +2,12 @@
 
 import { Loader } from "lucide-react";
 
-const ErrorPage = () => {
+const AppLoadingPage = () => {
   return (
-    <div className="h-screen flex items-center justify-center flex-col">
+    <div className="h-[70dvh] flex items-center justify-center flex-col">
       <Loader className="size-10 animate-spin text-muted-foreground" />
     </div>
   );
 };
 
-export default ErrorPage;
+export default AppLoadingPage;

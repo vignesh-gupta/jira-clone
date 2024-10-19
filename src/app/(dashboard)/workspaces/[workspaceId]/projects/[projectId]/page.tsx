@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/features/auth/queries";
 import ProjectAvatar from "@/features/projects/components/project-avatar";
 import { getProject } from "@/features/projects/queries";
+import TaskViewSwitcher from "@/features/tasks/components/task-view-switcher";
 import { PagePropsWithProjectIdParam } from "@/lib/types";
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";
@@ -38,6 +39,7 @@ const ProjectIdPage = async ({ params: { projectId } }: PagePropsWithProjectIdPa
           </Button>
         </div>
       </div>
+      <TaskViewSwitcher />
     </div>
   );
 };

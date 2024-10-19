@@ -1,6 +1,7 @@
 import authApp from "@/features/auth/server/route";
 import membersApp from "@/features/members/server/route";
 import projectApp from "@/features/projects/server/route";
+import taskApp from "@/features/tasks/sever/route";
 import workspacesApp from "@/features/workspaces/server/route";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
@@ -12,7 +13,8 @@ const app = new Hono()
   .route("/auth", authApp)
   .route("/workspaces", workspacesApp)
   .route("/members", membersApp)
-  .route("/projects", projectApp);
+  .route("/projects", projectApp)
+  .route("/tasks", taskApp);
 
 export type AppType = typeof app;
 

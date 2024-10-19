@@ -28,10 +28,7 @@ const authApp = new Hono()
 
       return c.json({ success: true , error: null});
     } catch (error) {
-      return c.json({
-        error: (error as Error)?.message ?? "An error occurred",
-        success: false,
-      });
+      throw new Error( (error as Error)?.message ?? "An error occurred");
     }
   })
   .post("/register", zValidator("json", registerSchema), async (c) => {

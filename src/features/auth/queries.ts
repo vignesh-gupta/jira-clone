@@ -7,7 +7,7 @@ export const getCurrentUser = async () => {
     const { account } = await createSessionClient();
     return await account.get();
   } catch (e: unknown) {
-    console.error(e);
+    console.error("[CURRENT_USER_ERR]",e);
     return null;
   }
 };

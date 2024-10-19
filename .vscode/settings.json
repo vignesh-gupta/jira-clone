@@ -3,6 +3,7 @@
     "workspace",
     "invite",
     "member",
-    "project"
+    "project",
+    "task"
   ]
 }
