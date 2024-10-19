@@ -20,6 +20,6 @@ export const createTaskSchema = z.object({
   description: z.string().optional(),
 });
 
-export type CreateTaskSchema = z.infer<typeof createTaskSchema>;
+export type CreateTaskSchemaType = z.infer<typeof createTaskSchema>;
 
 

@@ -2,17 +2,19 @@ import { QueryKeys } from "@/lib/constants";
 import { client } from "@/lib/rpc";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetProjects = ({ workspaceId }: { workspaceId: string }) => {
+export const useGetTasks = ({ workspaceId }: { workspaceId: string }) => {
   const query = useQuery({
-    queryKey: [QueryKeys.PROJECTS, workspaceId],
+    queryKey: [QueryKeys.TASKS, workspaceId],
     queryFn: async () => {
-      const response = await client.api.projects.$get({
+      const response = await client.api.tasks.$get({
         query: {
           workspaceId,
         },
       });
 
-      if (!response.ok) throw new Error("Failed to fetch projects");
+      if (!response.ok) {
+        throw new Error("Failed to fetch tasks");
+      }
 
       const { data } = await response.json();
 
