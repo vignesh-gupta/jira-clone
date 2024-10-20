@@ -8,6 +8,7 @@ import { Project } from "@/features/projects/types";
 import { createAdminClient } from "@/lib/appwrite";
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { createTaskSchema, getTasksSchema } from "../schema";
+import { Task } from "../types";
 
 const taskApp = new Hono();
 
@@ -44,18 +45,18 @@ export default taskApp
       if (status) query.push(Query.equal("status", status));
       if (assigneeId) query.push(Query.equal("assigneeId", assigneeId));
       if (search) query.push(Query.search("name", search));
-      if (dueDate) query.push(Query.equal("dueDate", dueDate));
+      if (dueDate) query.push(Query.lessThanEqual("dueDate", dueDate));
 
-      const tasks = await databases.listDocuments(DATABASE_ID, TASKS_ID, query);
-
-      const projectIds = tasks.documents.map((task) => task.projectId);
-
-      const assigneeIds = tasks.documents.map((task) => task.assigneeId);
-
+      const tasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, query);
+      
+      const projectIds = Array.from(new Set(tasks.documents.map((task) => task.projectId)));
+      
+      const assigneeIds = Array.from(new Set(tasks.documents.map((task) => task.assigneeId)));
+      
       const projects = await databases.listDocuments<Project>(
         DATABASE_ID,
         PROJECTS_ID,
-        projectId?.length && projectId?.length > 0
+        projectIds.length  > 0
           ? [Query.contains("$id", projectIds)]
           : []
       );
@@ -63,7 +64,7 @@ export default taskApp
       const members = await databases.listDocuments(
         DATABASE_ID,
         MEMBERS_ID,
-        assigneeId?.length && assigneeId?.length > 0
+        assigneeIds.length > 0
           ? [Query.contains("$id", assigneeIds)]
           : []
       );

@@ -1,7 +1,7 @@
 import authApp from "@/features/auth/server/route";
 import membersApp from "@/features/members/server/route";
 import projectApp from "@/features/projects/server/route";
-import taskApp from "@/features/tasks/sever/route";
+import taskApp from "@/features/tasks/server/route";
 import workspacesApp from "@/features/workspaces/server/route";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";

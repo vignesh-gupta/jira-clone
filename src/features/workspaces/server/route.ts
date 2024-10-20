@@ -84,8 +84,6 @@ const workspaceApp = new Hono()
         uploadedImageUrl = `data:${file.mimeType};base64,${Buffer.from(
           arrayBuffer
         ).toString("base64")}`;
-      } else {
-        console.log("No image uploaded");
       }
 
       const workspace = await databases.createDocument(
@@ -142,8 +140,6 @@ const workspaceApp = new Hono()
 
       let uploadedImageUrl: string | undefined;
 
-      console.log({ image });
-
       if (image instanceof Blob) {
         const fileId = ID.unique();
         const extStr = image.type.split("/")[1];
@@ -169,12 +165,8 @@ const workspaceApp = new Hono()
           arrayBuffer
         ).toString("base64")}`;
       } else {
-        console.log("No image uploaded");
-
         uploadedImageUrl = image;
       }
-
-      console.log({ name, uploadedImageUrl });
 
       const workspace = await databases.updateDocument(
         DATABASE_ID,

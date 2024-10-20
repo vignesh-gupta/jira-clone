@@ -43,6 +43,14 @@ type CreateTaskFormProps = {
   }[];
 };
 
+export const formatTaskStatus = (status: TaskStatus) => {
+  return status
+    .replace("_", " ")
+    .split(" ")
+    .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
 const CreateTaskForm = ({
   onCancel,
   membersOptions,
@@ -75,13 +83,7 @@ const CreateTaskForm = ({
     );
   };
 
-  const formatTaskStatus = (status: TaskStatus) => {
-    return status
-      .replace("_", " ")
-      .split(" ")
-      .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
-  };
+
 
   return (
     <Card className="w-full h-full border-none shadow-none">
@@ -143,11 +145,11 @@ const CreateTaskForm = ({
                       </FormControl>
                       <FormMessage />
                       <SelectContent>
-                        {membersOptions.map((members) => (
-                          <SelectItem key={members.id} value={members.id}>
+                        {membersOptions.map((member) => (
+                          <SelectItem key={member.id} value={member.id}>
                             <div className="flex items-center gap-x-2">
-                              <MemberAvatar name={members.name} />
-                              {members.name}
+                              <MemberAvatar name={member.name} />
+                              {member.name}
                             </div>
                           </SelectItem>
                         ))}
@@ -197,7 +199,7 @@ const CreateTaskForm = ({
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select assignee" />
+                          <SelectValue placeholder="Select Project" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />

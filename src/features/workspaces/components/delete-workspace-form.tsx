@@ -23,7 +23,6 @@ const DeleteWorkspaceForm = ({ workspaceId }: DeleteWorkspaceFormProps) => {
     const result = await confirm();
     if (!result) return;
 
-    console.log("Deleting workspace");
     deleteWorkspace(
       {
         param: { workspaceId },
