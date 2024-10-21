@@ -1,12 +1,10 @@
-import { ClassValue } from "clsx";
-
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 type MemberAvatarProps = {
   name: string;
-  className?: ClassValue;
-  fallbackClassName?: ClassValue;
+  className?: string;
+  fallbackClassName?: string;
 };
 
 const MemberAvatar = ({
