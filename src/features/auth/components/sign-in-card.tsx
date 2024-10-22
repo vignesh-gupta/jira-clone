@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { type LoginSchema, loginSchema } from "@/features/auth/schemas";
-import { useLogin } from "@/features/auth/hooks/use-login";
+import { useLogin } from "@/features/auth/api/use-login";
 
 const SignInCard = () => {
   const form = useForm<LoginSchema>({

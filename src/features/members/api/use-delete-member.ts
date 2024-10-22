@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
+import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
-import { toast } from "sonner";
 import { QueryKeys } from "@/lib/constants";
 
 type ResponseType = InferResponseType<

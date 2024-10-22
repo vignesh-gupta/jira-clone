@@ -1,6 +1,7 @@
 "use client";
 import { ArrowLeftIcon, MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 
 import DottedSeparator from "@/components/dotted-separator";
@@ -13,13 +14,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { useConfirm } from "@/hooks/use-confirm";
+
 import { useDeleteMember } from "../api/use-delete-member";
 import { useGetMembers } from "../api/use-get-members";
 import { useUpdateMember } from "../api/use-update-member";
 import { MemberRole } from "../types";
 import MemberAvatar from "./member-avatar";
-import { useConfirm } from "@/hooks/use-confirm";
-import { useRouter } from "next/navigation";
 
 type MembersListProps = {
   workspaceId: string;

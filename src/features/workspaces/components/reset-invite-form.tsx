@@ -1,12 +1,13 @@
 "use client";
+import { CopyIcon } from "lucide-react";
+import { toast } from "sonner";
 
 import DottedSeparator from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useConfirm } from "@/hooks/use-confirm";
-import { CopyIcon } from "lucide-react";
-import { toast } from "sonner";
+
 import { useResetInvite } from "../api/use-reset-invite";
 import { Workspace } from "../types";
 

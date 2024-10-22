@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { type RegisterSchema, registerSchema } from "@/features/auth/schemas";
-import { useRegister } from "../hooks/use-register";
+import { useRegister } from "../api/use-register";
 
 const SignUpCard = () => {
   const form = useForm<RegisterSchema>({

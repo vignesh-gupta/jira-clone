@@ -2,6 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
+import { useRef } from "react";
+import { toast } from "sonner";
+import { ImageIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import DottedSeparator from "@/components/dotted-separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -15,11 +20,6 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ImageIcon } from "lucide-react";
-import Image from "next/image";
-import { useRef } from "react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { createProjectSchema, CreateProjectSchemaType } from "../schema";
 import { useCreateProject } from "../api/use-create-project";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";

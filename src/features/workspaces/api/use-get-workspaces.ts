@@ -1,6 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { QueryKeys } from "@/lib/constants";
 import { client } from "@/lib/rpc";
-import { useQuery } from "@tanstack/react-query";
 
 export const useGetWorkspaces = () => {
   const query = useQuery({

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 
 import DottedSeparator from "@/components/dotted-separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -19,7 +20,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ArrowLeftIcon, ImageIcon } from "lucide-react";
+
 import { updateProjectSchema, UpdateProjectSchemaType } from "../schema";
 import { useUpdateProject } from "../api/use-update-project";
 import { Project } from "../types";

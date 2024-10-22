@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
-import { useGetWorkspaces } from "../api/use-get-workspaces";
-import { RiAddCircleFill } from "react-icons/ri";
+import { useRouter } from "next/navigation";
+
 import {
   Select,
   SelectContent,
@@ -10,11 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import WorkspaceAvatar from "./workspace-avatar";
-import { useRouter } from "next/navigation";
-import { useWorkspaceId } from "../hooks/use-workspace-id";
 import { Loader2 } from "lucide-react";
+import { RiAddCircleFill } from "react-icons/ri";
+import { useGetWorkspaces } from "../api/use-get-workspaces";
 import { useCreateWorkspaceModel } from "../hooks/use-create-workspace-model";
+import { useWorkspaceId } from "../hooks/use-workspace-id";
+import WorkspaceAvatar from "./workspace-avatar";
 
 const WorkspaceSwitcher = () => {
   const { data: workspaces, isLoading } = useGetWorkspaces();

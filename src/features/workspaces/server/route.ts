@@ -1,6 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { ID, Query } from "node-appwrite";
+import { z } from "zod";
 
 import {
   DATABASE_ID,
@@ -12,8 +13,8 @@ import { MemberRole } from "@/features/members/types";
 import { getMember } from "@/features/members/utils";
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { generateInviteCode } from "@/lib/utils";
+
 import { createWorkspaceSchema, updateWorkspaceSchema } from "../schemas";
-import { z } from "zod";
 import { Workspace } from "../types";
 
 const workspaceApp = new Hono()

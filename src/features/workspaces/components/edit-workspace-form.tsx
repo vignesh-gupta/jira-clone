@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
@@ -19,7 +20,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ArrowLeftIcon, ImageIcon } from "lucide-react";
+
 import { useUpdateWorkspace } from "../api/use-update-workspace";
 import { updateWorkspaceSchema, UpdateWorkspaceSchemaType } from "../schemas";
 import { Workspace } from "../types";

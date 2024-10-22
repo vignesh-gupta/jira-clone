@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import DottedSeparator from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +13,6 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { useJoinWorkspace } from "../api/use-join-workspace";
-import { useRouter } from "next/navigation";
 
 type JoinWorkspaceFormProps = {
   workspaceName: string;
