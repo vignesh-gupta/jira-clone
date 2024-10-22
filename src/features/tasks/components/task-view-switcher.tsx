@@ -1,18 +1,19 @@
 "use client";
 
 import { Loader, PlusIcon } from "lucide-react";
+import { useQueryState } from "nuqs";
 
 import DottedSeparator from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useCreateTaskModel } from "../hooks/use-create-task-model";
-import { useGetTasks } from "../api/use-get-tasks";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
-import { useQueryState } from "nuqs";
-import DataFilters from "./data-filters";
+import { useGetTasks } from "../api/use-get-tasks";
+import { useCreateTaskModel } from "../hooks/use-create-task-model";
 import { useTaskFilter } from "../hooks/use-task-filter";
-import { DataTable } from "./data-table";
 import { columns } from "./columns";
+import DataFilters from "./data-filters";
+import DataKanban from "./data-kanban";
+import { DataTable } from "./data-table";
 
 const TaskViewSwitcher = () => {
   const [view, setView] = useQueryState("task-view", {
@@ -28,9 +29,8 @@ const TaskViewSwitcher = () => {
     assigneeId,
     dueDate,
     search,
-    status
+    status,
   });
-
 
   return (
     <Tabs
@@ -69,7 +69,7 @@ const TaskViewSwitcher = () => {
               <DataTable columns={columns} data={tasks?.documents ?? []} />
             </TabsContent>
             <TabsContent value="kanban" className="mt-0">
-              {JSON.stringify(tasks?.total)}
+              <DataKanban data={tasks?.documents ?? []} />
             </TabsContent>
             <TabsContent value="calender" className="mt-0">
               {JSON.stringify(tasks?.total)}
