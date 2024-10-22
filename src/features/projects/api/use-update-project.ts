@@ -26,7 +26,7 @@ export const useUpdateProject = () => {
         param,
       });
 
-      if (!res.ok) throw new Error("Failed to update workspace");
+      if (!res.ok) throw new Error("Failed to update project");
 
       return await res.json();
     },

@@ -27,7 +27,7 @@ export const useDeleteProject = () => {
         param,
       });
 
-      if (!res.ok) throw new Error("Failed to delete workspace");
+      if (!res.ok) throw new Error("Failed to delete project");
 
       return await res.json();
     },

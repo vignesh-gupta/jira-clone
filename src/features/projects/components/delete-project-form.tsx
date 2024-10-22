@@ -12,8 +12,8 @@ type DeleteProjectFormProps = {
 const DeleteProjectForm = ({ projectId }: DeleteProjectFormProps) => {
 
   const [DeleteDialog, confirm] = useConfirm(
-    "Delete Workspace",
-    "Are you sure you want to delete this workspace?",
+    "Delete Project",
+    "Are you sure you want to delete this project?",
     "destructive"
   );
 
