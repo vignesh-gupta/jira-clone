@@ -14,11 +14,16 @@ import { columns } from "./columns";
 import DataFilters from "./data-filters";
 import DataKanban from "./data-kanban";
 import { DataTable } from "./data-table";
+import { useCallback } from "react";
+import { TaskStatus } from "../types";
+import { useBuildUpdateTask } from "../api/use-bulk-update-task";
 
 const TaskViewSwitcher = () => {
   const [view, setView] = useQueryState("task-view", {
     defaultValue: "table",
   });
+
+  const { mutate } = useBuildUpdateTask();
 
   const [{ projectId, assigneeId, dueDate, search, status }] = useTaskFilter();
   const workspaceId = useWorkspaceId();
@@ -31,6 +36,22 @@ const TaskViewSwitcher = () => {
     search,
     status,
   });
+
+  const onKanbanChange = useCallback(
+    (
+      tasks: {
+        $id: string;
+        status: TaskStatus;
+        position: number;
+      }[]
+    ) => {
+      console.log(tasks);
+      mutate({
+        json: { tasks },
+      });
+    },
+    [mutate]
+  );
 
   return (
     <Tabs
@@ -69,7 +90,10 @@ const TaskViewSwitcher = () => {
               <DataTable columns={columns} data={tasks?.documents ?? []} />
             </TabsContent>
             <TabsContent value="kanban" className="mt-0">
-              <DataKanban data={tasks?.documents ?? []} />
+              <DataKanban
+                data={tasks?.documents ?? []}
+                onChange={onKanbanChange}
+              />
             </TabsContent>
             <TabsContent value="calender" className="mt-0">
               {JSON.stringify(tasks?.total)}
