@@ -17,6 +17,7 @@ import { DataTable } from "./data-table";
 import { useCallback } from "react";
 import { TaskStatus } from "../types";
 import { useBuildUpdateTask } from "../api/use-bulk-update-task";
+import DataCalender from "./calender/data-calender";
 
 const TaskViewSwitcher = () => {
   const [view, setView] = useQueryState("task-view", {
@@ -95,8 +96,8 @@ const TaskViewSwitcher = () => {
                 onChange={onKanbanChange}
               />
             </TabsContent>
-            <TabsContent value="calender" className="mt-0">
-              {JSON.stringify(tasks?.total)}
+            <TabsContent value="calender" className="mt-0 h-full pb-4 ">
+              <DataCalender data={tasks?.documents ?? []} />
             </TabsContent>
           </>
         )}
