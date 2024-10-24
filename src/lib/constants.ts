@@ -9,6 +9,7 @@ export enum QueryKeys {
   MEMBER = "member",
   PROJECTS = "projects",
   PROJECT = "project",
+  PROJECT_ANALYTICS = "project-analytics",
   TASKS = "tasks",
   TASK = "task",
 }
