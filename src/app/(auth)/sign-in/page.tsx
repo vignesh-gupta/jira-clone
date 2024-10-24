@@ -4,10 +4,7 @@ import { redirect } from "next/navigation";
 
 const SignInPage = async () => {
   const user = await getCurrentUser();
-
-  if (user) {
-    redirect("/");
-  }
+  if (user) redirect("/");
 
   return <SignInCard />;
 };

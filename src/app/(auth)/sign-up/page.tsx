@@ -4,10 +4,8 @@ import { redirect } from "next/navigation";
 
 const SignUpPage = async () => {
   const user = await getCurrentUser();
+  if (user) redirect("/");
 
-  if (user) {
-    redirect("/");
-  }
   return <SignUpCard />;
 };
 

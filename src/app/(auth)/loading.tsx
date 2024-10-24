@@ -1,13 +1,9 @@
 "use client";
 
-import { Loader } from "lucide-react";
+import PageLoader from "@/components/page-loader";
 
 const AuthLoadingPage = () => {
-  return (
-    <div className="h-[80dvh] flex items-center justify-center flex-col">
-      <Loader className="size-10 animate-spin text-muted-foreground" />
-    </div>
-  );
+  return <PageLoader />;
 };
 
 export default AuthLoadingPage;

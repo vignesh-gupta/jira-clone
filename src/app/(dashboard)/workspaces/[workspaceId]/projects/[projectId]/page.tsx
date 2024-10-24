@@ -1,21 +1,23 @@
+import { PencilIcon } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/features/auth/queries";
 import ProjectAvatar from "@/features/projects/components/project-avatar";
 import { getProject } from "@/features/projects/queries";
 import TaskViewSwitcher from "@/features/tasks/components/task-view-switcher";
 import { PagePropsWithProjectIdParam } from "@/lib/types";
-import { PencilIcon } from "lucide-react";
-import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
 
-
-const ProjectIdPage = async ({ params: { projectId } }: PagePropsWithProjectIdParam) => {
+const ProjectIdPage = async ({
+  params: { projectId },
+}: PagePropsWithProjectIdParam) => {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
   const initialValue = await getProject({ projectId });
 
-  if (!initialValue) notFound()
+  if (!initialValue) throw new Error("Project not found");
 
   return (
     <div className="flex flex-col gap-y-4">
@@ -39,7 +41,7 @@ const ProjectIdPage = async ({ params: { projectId } }: PagePropsWithProjectIdPa
           </Button>
         </div>
       </div>
-      <TaskViewSwitcher />
+      <TaskViewSwitcher hideProjectFilter />
     </div>
   );
 };
