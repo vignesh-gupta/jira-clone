@@ -2,7 +2,7 @@
 
 import PageError from "@/components/page-error";
 
-const ErrorPage = ({
+const AuthErrorPage = ({
   error,
   reset,
 }: {
@@ -12,4 +12,4 @@ const ErrorPage = ({
   return <PageError message={error.message} reset={reset} />;
 };
 
-export default ErrorPage;
+export default AuthErrorPage;

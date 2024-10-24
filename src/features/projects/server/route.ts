@@ -11,6 +11,32 @@ import { createProjectSchema, updateProjectSchema } from "../schema";
 import { Project } from "../types";
 
 const projectApp = new Hono()
+  .get("/:projectId", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const user = c.get("user");
+
+    const { projectId } = c.req.param();
+
+    const project = await databases.getDocument<Project>(
+      DATABASE_ID,
+      PROJECTS_ID,
+      projectId
+    );
+
+    const member = await getMember({
+      databases,
+      workspaceId: project.workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    return c.json({
+      data: project,
+    });
+  })
   .get(
     "/",
     zValidator("query", z.object({ workspaceId: z.string() })),

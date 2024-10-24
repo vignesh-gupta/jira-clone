@@ -48,17 +48,7 @@ const EditProjectForm = ({ onCancel, initialValues }: EditProjectFormProps) => {
       ...data,
       image: data.image instanceof File ? data.image : "",
     };
-    mutate(
-      { form: finalData, param: { projectId: initialValues.$id } },
-      {
-        onSuccess: () => {
-          form.reset();
-          if (inputRef.current) {
-            inputRef.current.value = "";
-          }
-        },
-      }
-    );
+    mutate({ form: finalData, param: { projectId: initialValues.$id } });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +75,10 @@ const EditProjectForm = ({ onCancel, initialValues }: EditProjectFormProps) => {
             onClick={
               onCancel
                 ? onCancel
-                : () => router.push(`/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}`)
+                : () =>
+                    router.push(
+                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}`
+                    )
             }
           >
             <ArrowLeftIcon className="size-4 mr-2" /> Back
