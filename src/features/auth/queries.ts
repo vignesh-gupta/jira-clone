@@ -3,9 +3,10 @@
 import { createSessionClient } from "@/lib/appwrite";
 
 export const getCurrentUser = async () => {
-  const client = await createSessionClient();
-
-  if(!client) return null;
-
-  return (await client.account.get()) ?? null;
+  try {
+    const { account } = await createSessionClient();
+    return (await account.get()) ?? null;
+  } catch {
+    return null;
+  }
 };
