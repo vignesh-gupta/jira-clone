@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 
 import DottedSeparator from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
@@ -25,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { type RegisterSchema, registerSchema } from "@/features/auth/schemas";
+import { signUpWithGithub } from "@/lib/server/oauth";
 import { useRegister } from "../api/use-register";
 
 const SignUpCard = () => {
@@ -124,18 +124,19 @@ const SignUpCard = () => {
       </div>
 
       <CardContent className="p-7 flex flex-col gap-y-4">
-        <Button
+        {/* <Button
           variant="secondary"
           size="lg"
           className="w-full"
           disabled={isPending}
         >
           <FcGoogle className="mr-2 size-5" /> Login with Google
-        </Button>
+        </Button> */}
         <Button
           variant="secondary"
           size="lg"
           className="w-full"
+          onClick={() => signUpWithGithub()}
           disabled={isPending}
         >
           <FaGithub className="mr-2 size-5" />

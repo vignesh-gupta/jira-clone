@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 
 import DottedSeparator from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
@@ -23,8 +22,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { type LoginSchema, loginSchema } from "@/features/auth/schemas";
 import { useLogin } from "@/features/auth/api/use-login";
+import { type LoginSchema, loginSchema } from "@/features/auth/schemas";
+import { signUpWithGithub } from "@/lib/server/oauth";
 
 const SignInCard = () => {
   const form = useForm<LoginSchema>({
@@ -80,7 +80,12 @@ const SignInCard = () => {
               )}
             />
 
-            <Button type="submit" size="lg" className="w-full" disabled={isPending}>
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={isPending}
+            >
               Login
             </Button>
           </form>
@@ -92,18 +97,20 @@ const SignInCard = () => {
       </div>
 
       <CardContent className="p-7 flex flex-col gap-y-4">
-        <Button
+        {/* <Button
           variant="secondary"
           size="lg"
           className="w-full"
+          onClick={() => signUpWithGithub()}
           disabled={isPending}
         >
           <FcGoogle className="mr-2 size-5" /> Login with Google
-        </Button>
+        </Button> */}
         <Button
           variant="secondary"
           size="lg"
           className="w-full"
+          onClick={() => signUpWithGithub()}
           disabled={isPending}
         >
           <FaGithub className="mr-2 size-5" />

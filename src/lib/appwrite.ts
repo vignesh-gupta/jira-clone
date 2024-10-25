@@ -12,7 +12,7 @@ export async function createSessionClient() {
   const session = cookies().get(AUTH_COOKIE_NAME);
 
   if (!session || !session.value) {
-    throw new Error("Unauthorized");
+    return null
   }
 
   client.setSession(session.value);
