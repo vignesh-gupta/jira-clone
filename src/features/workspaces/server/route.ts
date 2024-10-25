@@ -7,6 +7,7 @@ import {
   DATABASE_ID,
   IMAGE_BUCKET_ID,
   MEMBERS_ID,
+  TASKS_ID,
   WORKSPACES_ID,
 } from "@/config";
 import { MemberRole } from "@/features/members/types";
@@ -16,6 +17,8 @@ import { generateInviteCode } from "@/lib/utils";
 
 import { createWorkspaceSchema, updateWorkspaceSchema } from "../schemas";
 import { Workspace } from "../types";
+import { endOfMonth, startOfMonth, subMonths } from "date-fns";
+import { TaskStatus } from "@/features/tasks/types";
 
 const workspaceApp = new Hono()
   .get("/:workspaceId", sessionMiddleware, async (c) => {
@@ -328,6 +331,158 @@ const workspaceApp = new Hono()
 
       return c.json({ data: workspace });
     }
-  );
+  )
+  .get("/:workspaceId/analytic", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const user = c.get("user");
+
+    const { workspaceId } = c.req.param();
+    const member = await getMember({
+      databases,
+      workspaceId: workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    const now = new Date();
+    const thisMonthStart = startOfMonth(now);
+    const thisMonthEnd = endOfMonth(now);
+    const lastMonthStart = startOfMonth(subMonths(now, 1));
+    const lastMonthEnd = endOfMonth(subMonths(now, 1));
+
+    const thisMonthTasks = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_ID,
+      [
+        Query.equal("workspaceId", workspaceId),
+        Query.greaterThanEqual("$createdAt", thisMonthStart.toISOString()),
+        Query.lessThanEqual("$createdAt", thisMonthEnd.toISOString()),
+      ]
+    );
+    const lastMonthTasks = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_ID,
+      [
+        Query.equal("workspaceId", workspaceId),
+        Query.greaterThanEqual("$createdAt", lastMonthStart.toISOString()),
+        Query.lessThanEqual("$createdAt", lastMonthEnd.toISOString()),
+      ]
+    );
+    const taskCount = thisMonthTasks.total;
+    const taskDiff = taskCount - lastMonthTasks.total;
+
+    const thisMonthAssignedTasks = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_ID,
+      [
+        Query.equal("workspaceId", workspaceId),
+        Query.greaterThanEqual("$createdAt", thisMonthStart.toISOString()),
+        Query.lessThanEqual("$createdAt", thisMonthEnd.toISOString()),
+        Query.equal("assigneeId", user.$id),
+      ]
+    );
+    const lastMonthAssignedTasks = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_ID,
+      [
+        Query.equal("workspaceId", workspaceId),
+        Query.greaterThanEqual("$createdAt", lastMonthStart.toISOString()),
+        Query.lessThanEqual("$createdAt", lastMonthEnd.toISOString()),
+        Query.equal("assigneeId", user.$id),
+      ]
+    );
+    const assignedTaskCount = thisMonthAssignedTasks.total;
+    const assignedTaskDiff = assignedTaskCount - lastMonthAssignedTasks.total;
+
+    const thisMonthInCompletedTasks = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_ID,
+      [
+        Query.equal("workspaceId", workspaceId),
+        Query.greaterThanEqual("$createdAt", thisMonthStart.toISOString()),
+        Query.lessThanEqual("$createdAt", thisMonthEnd.toISOString()),
+        Query.notEqual("status", TaskStatus.DONE),
+      ]
+    );
+    const lastMonthInCompletedTasks = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_ID,
+      [
+        Query.equal("workspaceId", workspaceId),
+        Query.greaterThanEqual("$createdAt", lastMonthStart.toISOString()),
+        Query.lessThanEqual("$createdAt", lastMonthEnd.toISOString()),
+        Query.notEqual("status", TaskStatus.DONE),
+      ]
+    );
+    const inCompletedTaskCount = thisMonthInCompletedTasks.total;
+    const inCompletedTaskDiff =
+      inCompletedTaskCount - lastMonthInCompletedTasks.total;
+
+    const thisMonthCompletedTask = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_ID,
+      [
+        Query.equal("workspaceId", workspaceId),
+        Query.greaterThanEqual("$createdAt", thisMonthStart.toISOString()),
+        Query.lessThanEqual("$createdAt", thisMonthEnd.toISOString()),
+        Query.equal("status", TaskStatus.DONE),
+      ]
+    );
+    const lastMonthCompletedTask = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_ID,
+      [
+        Query.equal("workspaceId", workspaceId),
+        Query.greaterThanEqual("$createdAt", lastMonthStart.toISOString()),
+        Query.lessThanEqual("$createdAt", lastMonthEnd.toISOString()),
+        Query.equal("status", TaskStatus.DONE),
+      ]
+    );
+    const completedTaskCount = thisMonthCompletedTask.total;
+    const completedTaskDiff = completedTaskCount - lastMonthCompletedTask.total;
+
+    const thisMonthOverDueTasks = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_ID,
+      [
+        Query.equal("workspaceId", workspaceId),
+        Query.greaterThanEqual("$createdAt", thisMonthStart.toISOString()),
+        Query.lessThanEqual("$createdAt", thisMonthEnd.toISOString()),
+        Query.lessThan("dueDate", new Date().toISOString()),
+        Query.notEqual("status", TaskStatus.DONE),
+      ]
+    );
+    const lastMonthOverDueTasks = await databases.listDocuments(
+      DATABASE_ID,
+      TASKS_ID,
+      [
+        Query.equal("workspaceId", workspaceId),
+        Query.greaterThanEqual("$createdAt", lastMonthStart.toISOString()),
+        Query.lessThanEqual("$createdAt", lastMonthEnd.toISOString()),
+        Query.lessThan("dueDate", new Date().toISOString()),
+        Query.notEqual("status", TaskStatus.DONE),
+      ]
+    );
+    const overDueTaskCount = thisMonthOverDueTasks.total;
+    const overDueTaskDiff = overDueTaskCount - lastMonthOverDueTasks.total;
+
+    return c.json({
+      data: {
+        taskCount,
+        taskDiff,
+        assignedTaskCount,
+        assignedTaskDiff,
+        inCompletedTaskCount,
+        inCompletedTaskDiff,
+        completedTaskCount,
+        completedTaskDiff,
+        overDueTaskCount,
+        overDueTaskDiff,
+      },
+    });
+  });
 
 export default workspaceApp;

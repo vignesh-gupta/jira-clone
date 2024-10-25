@@ -1,13 +1,12 @@
-import { getCurrentUser } from "@/features/auth/queries";
-import { PageWithWorkspaceId } from "@/features/workspaces/types";
 import { redirect } from "next/navigation";
-import React from "react";
+import { getCurrentUser } from "@/features/auth/queries";
+import WorkspaceIdClientPage from "./client";
 
-const WorkspaceId = async ({ params }: PageWithWorkspaceId) => {
+const WorkspaceId = async () => {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
-  return <div>WorkspaceId: {params.workspaceId}</div>;
+  return <WorkspaceIdClientPage />;
 };
 
 export default WorkspaceId;
