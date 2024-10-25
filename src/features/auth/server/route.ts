@@ -3,10 +3,10 @@ import { Hono } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
 import { ID } from "node-appwrite";
 
+import { loginSchema, registerSchema } from "@/features/auth/schemas";
 import { createAdminClient } from "@/lib/appwrite";
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
 import { sessionMiddleware } from "@/lib/session-middleware";
-import { loginSchema, registerSchema } from "@/features/auth/schemas";
 
 const authApp = new Hono()
   .get("/current", sessionMiddleware, (c) => c.json({ user: c.get("user") }))

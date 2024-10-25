@@ -36,7 +36,7 @@ type CreateTaskFormProps = {
   projectOptions: {
     id: string;
     name: string;
-    imageUrl: string;
+    imageUrl?: string;
   }[];
   membersOptions: {
     id: string;

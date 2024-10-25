@@ -1,17 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Project } from "@/features/projects/types";
-import React, { MouseEvent } from "react";
-import { TaskStatus } from "../../types";
-import { cn } from "@/lib/utils";
-import MemberAvatar from "@/features/members/components/member-avatar";
-import ProjectAvatar from "@/features/projects/components/project-avatar";
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useRouter } from "next/navigation";
+import { MouseEvent } from "react";
+
+import MemberAvatar from "@/features/members/components/member-avatar";
+import { Member } from "@/features/members/types";
+import ProjectAvatar from "@/features/projects/components/project-avatar";
+import { Project } from "@/features/projects/types";
+import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
+import { cn } from "@/lib/utils";
+
+import { TaskStatus } from "../../types";
 
 type EventCardProps = {
   title: string;
   project: Project;
-  assignee: any;
+  assignee: Member;
   id: string;
   status: TaskStatus;
 };
@@ -42,7 +44,7 @@ const EventCard = ({
   return (
     <div className="px-2">
       <div
-      onClick={onClick}
+        onClick={onClick}
         className={cn(
           "p-1.5 text-xs bg-white text-primary border rounded-md border-l-4 flex flex-col gap-y-1.5 cursor-pointer hover:opacity-75 transition",
           statusColorsMap[status]
