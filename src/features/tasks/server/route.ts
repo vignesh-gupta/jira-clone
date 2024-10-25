@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { ID, Query } from "node-appwrite";
+import { ID, Models, Query } from "node-appwrite";
 
 import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 import { getMember } from "@/features/members/utils";
@@ -115,17 +115,27 @@ export default taskApp
         new Set(tasks.documents.map((task) => task.assigneeId))
       );
 
-      const projects = await databases.listDocuments<Project>(
-        DATABASE_ID,
-        PROJECTS_ID,
-        projectIds.length > 0 ? [Query.contains("$id", projectIds)] : []
-      );
+      let projects: Models.DocumentList<Project> = {
+        documents: [],
+        total: 0,
+      };
 
-      const members = await databases.listDocuments(
-        DATABASE_ID,
-        MEMBERS_ID,
-        assigneeIds.length > 0 ? [Query.contains("$id", assigneeIds)] : []
-      );
+      if (projectIds.length > 0)
+        projects = await databases.listDocuments<Project>(
+          DATABASE_ID,
+          PROJECTS_ID,
+          [Query.contains("$id", projectIds)]
+        );
+
+      let members: Models.DocumentList<Project> = {
+        documents: [],
+        total: 0,
+      };
+
+      if (assigneeIds.length > 0)
+        members = await databases.listDocuments(DATABASE_ID, MEMBERS_ID, [
+          Query.equal("$id", assigneeIds),
+        ]);
 
       const assignees = await Promise.all(
         members.documents.map(async (member) => {
